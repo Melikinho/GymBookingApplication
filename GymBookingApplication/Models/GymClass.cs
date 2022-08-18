@@ -10,7 +10,5 @@
         public TimeSpan Duration { get; set; }
         public DateTime EndTime { get { return StartTime + Duration; } }     /// Observera ; efter 'Duration'
         public String Description { get; set; }
-
-        public ApplicationUser ApplicationUser { get; set; }
     }
 }

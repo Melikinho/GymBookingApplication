@@ -2,7 +2,7 @@
 {
     public class ApplicationUserGymClass
     {
-        public int GymClassId { get; set; } 
+        public int Id { get; set; } 
 
     }
 }
