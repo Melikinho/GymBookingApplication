@@ -9,5 +9,6 @@ namespace GymBookingApplication.Data
             : base(options)
         {
         }
+        public DbSet<GymBookingApplication.Models.GymClass> GymClass { get; set; }
     }
 }
