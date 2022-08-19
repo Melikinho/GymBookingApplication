@@ -3,7 +3,6 @@
     public class ApplicationUserGymClass
 #nullable disable
     {
-        public int Id { get; set; }
         public int GymClassId { get; set; }   //Foreign
         public int ApplicationUserId { get; set; }  //Foreign
         public GymClass GymClass { get; set; }   //Nav
