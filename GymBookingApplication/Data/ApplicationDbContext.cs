@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GymBookingApplication.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityRole, String>
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityRole, string>
 #nullable disable
     {
 
@@ -17,5 +17,22 @@ namespace GymBookingApplication.Data
         public DbSet<GymBookingApplication.Models.ApplicationUser> ApplicationUser { get; set; } = null!;
 
         public DbSet<GymBookingApplication.Models.ApplicationUserGymClass> applicationUserGymClass => Set<ApplicationUserGymClass>();
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+
+            builder.Entity<ApplicationUser>()
+                .HasMany(m => m.GymClasses)
+                .WithMany(n => n.ApplicationUsers)
+                .UsingEntity<ApplicationUserGymClass>(
+                Ha => Ha.HasOne(Ha => Ha.GymClass).WithMany(m => m.ApplicationUserGymClasses),
+                Ha => Ha.HasOne(Ha => Ha.ApplicationUser).WithMany(m => m.ApplicationUserGymClasses));
+
+            //KompositNyckel - Fluent API
+
+            builder.Entity<ApplicationUserGymClass>().HasKey(
+                a => new { a.ApplicationUserId, a.GymClassId });
+        }
     }
 }

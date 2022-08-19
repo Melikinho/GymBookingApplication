@@ -6,7 +6,7 @@
         public int GymClassId { get; set; }   //Foreign
         public int ApplicationUserId { get; set; }  //Foreign
         public GymClass GymClass { get; set; }   //Nav
-        public ApplicationUser applicationUser { get; set; }  //Nav
+        public ApplicationUser ApplicationUser { get; set; }  //Nav
 
     }
 }
