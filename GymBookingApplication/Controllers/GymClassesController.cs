@@ -8,6 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using GymBookingApplication.Data;
 using GymBookingApplication.Models;
 using Microsoft.AspNetCore.Identity;
+using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace GymBookingApplication.Controllers
 {
@@ -15,6 +18,34 @@ namespace GymBookingApplication.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IMapper mapper;
+
+        [Authorize]
+        public async Task<IActionResult> BookingToogle(int? id)
+        {
+            if (id == null) return NotFound();
+
+            var logIn = await _userManager.GetUserAsync(HttpContext.User);
+            if (logIn == null)
+                return NotFound();
+
+            var SelectedGymClassLoggedIn = await _context.applicationUserGymClass
+                .AsTracking()
+                .Include(m => m.ApplicationUser)
+                .Include(m => m.GymClass)
+                .Where(m => m.ApplicationUser.Id == logIn.Id && m.GymClass.Id == id)
+                .ToListAsync();
+
+            if (SelectedGymClassLoggedIn.Count == 0)
+                _context.Add(new ApplicationUserGymClass() { ApplicationUserId = logIn.Id, GymClassId = id.GetValueOrDefault() });  
+            else
+                _context.applicationUserGymClass.RemoveRange(SelectedGymClassLoggedIn);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
+
+
+        }
 
         public GymClassesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
@@ -24,6 +55,8 @@ namespace GymBookingApplication.Controllers
 
         // GET: GymClasses
         public async Task<IActionResult> Index()
+
+
         {
               return _context.GymClass != null ? 
                           View(await _context.GymClass.ToListAsync()) :
@@ -49,6 +82,7 @@ namespace GymBookingApplication.Controllers
         }
 
         // GET: GymClasses/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             return View();
@@ -59,6 +93,7 @@ namespace GymBookingApplication.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("Id,Name,StartTime,Duration,Description")] GymClass gymClass)
         {
             if (ModelState.IsValid)
@@ -71,6 +106,7 @@ namespace GymBookingApplication.Controllers
         }
 
         // GET: GymClasses/Edit/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.GymClass == null)
@@ -91,6 +127,7 @@ namespace GymBookingApplication.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,StartTime,Duration,Description")] GymClass gymClass)
         {
             if (id != gymClass.Id)
@@ -122,6 +159,7 @@ namespace GymBookingApplication.Controllers
         }
 
         // GET: GymClasses/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.GymClass == null)
@@ -140,6 +178,7 @@ namespace GymBookingApplication.Controllers
         }
 
         // POST: GymClasses/Delete/5
+        [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
