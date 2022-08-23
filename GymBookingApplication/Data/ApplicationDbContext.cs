@@ -16,7 +16,7 @@ namespace GymBookingApplication.Data
         public DbSet<GymBookingApplication.Models.GymClass> GymClass => Set<GymClass>();
         public DbSet<GymBookingApplication.Models.ApplicationUser> ApplicationUser { get; set; } = null!;
 
-        public DbSet<GymBookingApplication.Models.ApplicationUserGymClass> applicationUserGymClass => Set<ApplicationUserGymClass>();
+        public DbSet<GymBookingApplication.Models.ApplicationUserGymClass> ApplicationUserGymClass => Set<ApplicationUserGymClass>();
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
