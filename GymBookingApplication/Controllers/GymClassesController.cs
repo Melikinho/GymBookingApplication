@@ -21,37 +21,45 @@ namespace GymBookingApplication.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMapper mapper;
 
+        public GymClassesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        {
+            _context = context;
+            this._userManager = userManager;
+        }
+
         [Authorize]
         public async Task<IActionResult> BookingToogle(int? id)
         {
-            if (id == null) return NotFound();
+            if (id is null) return BadRequest();
 
             var logIn = await _userManager.GetUserAsync(HttpContext.User);
             if (logIn == null)
                 return NotFound();
+            var userId = _userManager.GetUserId(User);
 
-            var SelectedGymClassLoggedIn = await _context.applicationUserGymClass
-                .AsTracking()
-                .Include(m => m.ApplicationUser)
-                .Include(m => m.GymClass)
-                .Where(m => m.ApplicationUser.Id == logIn.Id && m.GymClass.Id == id)
-                .ToListAsync();
 
-            if (SelectedGymClassLoggedIn.Count == 0)
-                _context.Add(new ApplicationUserGymClass() { ApplicationUserId = logIn.Id, GymClassId = id.GetValueOrDefault() });  
+            var attending = await _context.applicationUserGymClass.FindAsync(userId, id);
+
+            if (attending == null)
+            {
+                var booking = new ApplicationUserGymClass
+                {
+                    ApplicationUserId = userId,
+                    GymClassId = (int)id
+                };
+
+                _context.applicationUserGymClass.Add(booking);
+            }
             else
-                _context.applicationUserGymClass.RemoveRange(SelectedGymClassLoggedIn);
+            {
+                _context.Remove(attending);
+            }
+
             await _context.SaveChangesAsync();
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index");
 
 
-        }
-
-        public GymClassesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
-        {
-            _context = context;
-            _userManager = userManager;
         }
 
         // GET: GymClasses
