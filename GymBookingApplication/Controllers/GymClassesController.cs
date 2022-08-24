@@ -38,7 +38,7 @@ namespace GymBookingApplication.Controllers
             var userId = _userManager.GetUserId(User);
 
 
-            var attending = await _context.applicationUserGymClass.FindAsync(userId, id);
+            var attending = await _context.ApplicationUserGymClass.FindAsync(userId, id);
 
             if (attending == null)
             {
@@ -48,7 +48,7 @@ namespace GymBookingApplication.Controllers
                     GymClassId = (int)id
                 };
 
-                _context.applicationUserGymClass.Add(booking);
+                _context.ApplicationUserGymClass.Add(booking);
             }
             else
             {
