@@ -31,13 +31,8 @@ namespace GymBookingApplication.Controllers
         public async Task<IActionResult> BookingToogle(int? id)
         {
             if (id is null) return BadRequest();
-
-            var logIn = await _userManager.GetUserAsync(HttpContext.User);
-            if (logIn == null)
-                return NotFound();
             var userId = _userManager.GetUserId(User);
-
-
+            if (userId == null) return BadRequest();
             var attending = await _context.ApplicationUserGymClass.FindAsync(userId, id);
 
             if (attending == null)
@@ -59,6 +54,11 @@ namespace GymBookingApplication.Controllers
 
             return RedirectToAction("Index");
 
+            //Behövs inte
+            //var logIn = await _userManager.GetUserAsync(HttpContext.User);
+            //if (logIn == null)
+            //    return NotFound();
+            
 
         }
 
@@ -102,7 +102,7 @@ namespace GymBookingApplication.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> Create([Bind("Id,Name,StartTime,Duration,Description")] GymClass gymClass)
         {
             if (ModelState.IsValid)
