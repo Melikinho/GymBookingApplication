@@ -9,7 +9,7 @@ namespace GymBookingApplication.Data
         public static async Task InitAsync(ApplicationDbContext db, RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager, string aPassword)
         {
 
-            await roleManager.CreateAsync(new IdentityRole( { Name = "Admin" }));
+            await roleManager.CreateAsync(new IdentityRole() { Name = "Admin" });
 
             {
                 var adminUser = new ApplicationUser()
