@@ -1,4 +1,6 @@
 ﻿@model IEnumerable<GymBookingApplication.Models.GymClass>
+@using System.Security.Claims
+@using GymBookingApplication.Models
 
 @{
     ViewData["Title"] = "Index";
@@ -7,7 +9,7 @@
 <h1>Index</h1>
 
 <p>
-    @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+    @if (User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole("Admin"))
     {
         <p>
 
@@ -51,10 +53,24 @@
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
-                @if(User.Identity.IsAuthenticated) {<a asp-action="BookingToogle" asp-route-id="@item.Id">Book</a><span> | </span>}
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> @Html.Raw(" | ")
+                    @if (User.Identity.IsAuthenticated)
+                    {
+
+                        var membersBooked = item.ApplicationUserGymClasses.FirstOrDefault(v => v.ApplicationUserId == User.FindFirstValue(ClaimTypes.NameIdentifier)) != null;
+
+                        @if (membersBooked)
+                        {
+                            <a asp-action="BookingToogle" asp-route-id="@item.Id">Unbook</a>
+                        }
+                        else
+                        {
+                            <a asp-action="BookingToogle" asp-route-id="@item.Id">book</a> 
+                        }
+                    }
                 @if(User.Identity.IsAuthenticated && (User.IsInRole("Admin"))) {<a asp-action="Edit" asp-route-id="@item.Id">Edit</a><span> | </span>}
                 @if(User.Identity.IsAuthenticated && (User.IsInRole("Admin"))) {<a asp-action="Delete" asp-route-id="@item.Id">Delete</a><span> | </span>}
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+
             </td>
         </tr>
 }

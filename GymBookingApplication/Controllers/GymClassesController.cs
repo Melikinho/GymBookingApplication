@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Identity;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using System.Diagnostics;
 
 namespace GymBookingApplication.Controllers
 {
@@ -209,6 +210,11 @@ namespace GymBookingApplication.Controllers
         private bool GymClassExists(int id)
         {
           return (_context.GymClass?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }
