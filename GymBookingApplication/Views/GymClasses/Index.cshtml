@@ -51,7 +51,7 @@
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
-                @if(User.Identity.IsAuthenticated) {<a asp-action="BooknigToogle" asp-route-id="@item.Id">Book</a><span> | </span>}
+                @if(User.Identity.IsAuthenticated) {<a asp-action="BookingToogle" asp-route-id="@item.Id">Book</a><span> | </span>}
                 @if(User.Identity.IsAuthenticated && (User.IsInRole("Admin"))) {<a asp-action="Edit" asp-route-id="@item.Id">Edit</a><span> | </span>}
                 @if(User.Identity.IsAuthenticated && (User.IsInRole("Admin"))) {<a asp-action="Delete" asp-route-id="@item.Id">Delete</a><span> | </span>}
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a>
