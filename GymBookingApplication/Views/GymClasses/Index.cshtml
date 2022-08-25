@@ -3,7 +3,7 @@
 @using GymBookingApplication.Models
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Gym Classes";
 }
 
 <h1>Index</h1>
@@ -11,6 +11,7 @@
 <p>
     @if (User.Identity != null && User.Identity.IsAuthenticated && User.IsInRole("Admin"))
     {
+
         <p>
 
         <a asp-action="Create">Create New</a>

@@ -20,7 +20,6 @@ namespace GymBookingApplication.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IMapper mapper;
 
         public GymClassesController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
@@ -62,10 +61,9 @@ namespace GymBookingApplication.Controllers
             
 
         }
-
+        [AllowAnonymous]
         // GET: GymClasses
         public async Task<IActionResult> Index()
-
 
         {
               return _context.GymClass != null ? 
