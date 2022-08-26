@@ -1,6 +1,8 @@
-﻿@model IEnumerable<GymBookingApplication.Models.GymClass>
+﻿@model IEnumerable<GymClassViewModelcs>
 @using System.Security.Claims
 @using GymBookingApplication.Models
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> userManager
 
 @{
     ViewData["Title"] = "Gym Classes";
@@ -57,12 +59,12 @@
                     <a asp-action="Details" asp-route-id="@item.Id">Details</a> @Html.Raw(" | ")
                     @if (User.Identity.IsAuthenticated)
                     {
-
-                        var membersBooked = item.ApplicationUserGymClasses.FirstOrDefault(v => v.ApplicationUserId == User.FindFirstValue(ClaimTypes.NameIdentifier)) != null;
-
-                        @if (membersBooked)
+                       
+    
+                        @if (item.IsBooked)
                         {
-                            <a asp-action="BookingToogle" asp-route-id="@item.Id">Unbook</a>
+                          <a asp-action="BookingToogle" asp-route-id="@item.Id">Unbook</a>
+                            
                         }
                         else
                         {

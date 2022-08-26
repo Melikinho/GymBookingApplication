@@ -13,6 +13,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using System.Diagnostics;
+using GymBookingApplication.Models.ViewModels;
 
 namespace GymBookingApplication.Controllers
 {
@@ -64,11 +65,29 @@ namespace GymBookingApplication.Controllers
         [AllowAnonymous]
         // GET: GymClasses
         public async Task<IActionResult> Index()
-
         {
-              return _context.GymClass != null ? 
-                          View(await _context.GymClass.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.GymClass'  is null.");
+
+            var userId = _userManager.GetUserId(User);
+            var viewModel = await _context.GymClass
+                .Include(g => g.ApplicationUsers)
+                .Select(g => new GymClassViewModelcs
+                {
+                    Id = g.Id,
+                    Name = g.Name,
+                    Duration = g.Duration,
+                    StartTime = g.StartTime,
+                    Description = g.Description,
+                    IsBooked = g.ApplicationUsers.Any(a => a.Id == userId)
+
+                    // IsBooked = g.ApplicationUsers.Count > 0 ???
+
+
+                }).ToListAsync();
+
+              //return _context.GymClass != null ? 
+              //            View(await _context.GymClass.ToListAsync()) :
+              //            Problem("Entity set 'ApplicationDbContext.GymClass'  is null.");
+              return View(viewModel);
         }
 
         // GET: GymClasses/Details/5
