@@ -6,7 +6,7 @@ namespace GymBookingApplication.Data
 {
     public class SeedData
     {
-        public static async Task InitAsync(ApplicationDbContext db, RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager, string aPassword)
+        public static async Task InitAsync(ApplicationDbContext db, RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager)
         {
 
             await roleManager.CreateAsync(new IdentityRole() { Name = "Admin" });

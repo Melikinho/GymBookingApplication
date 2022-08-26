@@ -1,6 +1,6 @@
 ﻿namespace GymBookingApplication.Models.ViewModels
 {
-    public class GymClassViewModelcs
+    public class GymClassViewModel
     {
 #nullable disable
         public int Id { get; set; }

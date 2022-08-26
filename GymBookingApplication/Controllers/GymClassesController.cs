@@ -70,7 +70,7 @@ namespace GymBookingApplication.Controllers
             var userId = _userManager.GetUserId(User);
             var viewModel = await _context.GymClass
                 .Include(g => g.ApplicationUsers)
-                .Select(g => new GymClassViewModelcs
+                .Select(g => new GymClassViewModel
                 {
                     Id = g.Id,
                     Name = g.Name,
@@ -79,14 +79,9 @@ namespace GymBookingApplication.Controllers
                     Description = g.Description,
                     IsBooked = g.ApplicationUsers.Any(a => a.Id == userId)
 
-                    // IsBooked = g.ApplicationUsers.Count > 0 ???
-
 
                 }).ToListAsync();
 
-              //return _context.GymClass != null ? 
-              //            View(await _context.GymClass.ToListAsync()) :
-              //            Problem("Entity set 'ApplicationDbContext.GymClass'  is null.");
               return View(viewModel);
         }
 
