@@ -63,16 +63,16 @@
     
                         @if (item.IsBooked)
                         {
-                          <a asp-action="BookingToogle" asp-route-id="@item.Id">Unbook</a>
+                          <a asp-action="BookingToogle" asp-route-id="@item.Id">Unbook</a> <span> | </span>
                             
                         }
                         else
                         {
-                            <a asp-action="BookingToogle" asp-route-id="@item.Id">book</a> 
+                            <a asp-action="BookingToogle" asp-route-id="@item.Id">book</a> <span> | </span>
                         }
                     }
                 @if(User.Identity.IsAuthenticated && (User.IsInRole("Admin"))) {<a asp-action="Edit" asp-route-id="@item.Id">Edit</a><span> | </span>}
-                @if(User.Identity.IsAuthenticated && (User.IsInRole("Admin"))) {<a asp-action="Delete" asp-route-id="@item.Id">Delete</a><span> | </span>}
+                @if(User.Identity.IsAuthenticated && (User.IsInRole("Admin"))) {<a asp-action="Delete" asp-route-id="@item.Id">Delete</a>}
 
             </td>
         </tr>
